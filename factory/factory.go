@@ -1,6 +1,7 @@
 package factory
 
 // This is abstract factory mode example
+// 抽象工厂一般是用于生产产品的时候，被生成的产品是有关系的
 
 import "fmt"
 
