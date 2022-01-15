@@ -1,0 +1,1 @@
+this is an example for how to write a simple orm
