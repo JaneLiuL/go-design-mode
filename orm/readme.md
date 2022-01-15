@@ -12,7 +12,7 @@ Builer().Table().Where().Limit().Do()
 product := Product{
     Name: "testproduct",
 }
-Builer().Table("product").Do("insert", product)
+Builer().Table("product").Insert(product).Do()
 ```
 
 删除

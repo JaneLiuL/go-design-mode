@@ -10,8 +10,8 @@ import (
 type Builder struct {
 	DB        *sql.DB
 	TableName string
-	Prepare	string
-	AllExec      []interface{}
+	Prepare   string
+	AllExec   []interface{}
 	Limit     string
 
 	ExecWhere []string
@@ -23,10 +23,10 @@ type Product struct {
 	Price       int    `sql: "price"`
 }
 
-type Mysql struct {
+type mq struct {
 }
 
-func (mysql Mysql) Newbuilder(username, password, addr, dbname string) (*Builder, error) {
+func (mq mq) Newbuilder(username, password, addr, dbname string) (*Builder, error) {
 	// also can enhance with builder mode
 	dsn := username + ":" + password + "@tcp(" + addr + ")/" + dbname + "?charset=utf8"
 	db, err := sql.Open("mysql", dsn)
@@ -75,7 +75,7 @@ func (builder *Builder) Insert(product interface{}) *Builder {
 			if strings.Contains(strings.ToLower(sqlTag), "auto_increment") {
 				continue
 			} else {
-				fieldName = append(fieldName, strings.Split((sqlTag, ",")[0])
+				fieldName = append(fieldName, strings.Split(sqlTag, ",")[0])
 				placeholder = append(placeholder, "?")
 			}
 		}
@@ -83,13 +83,13 @@ func (builder *Builder) Insert(product interface{}) *Builder {
 		builder.AllExec = append(builder.AllExec, v.Field(i).Interface())
 	}
 	//	拼接成这样 "insert into product (name, description, price) values (?,?,?)"
-	builder.Prepare = "insert into " + builder.GetTable() + " (" + strings.Join(fieldName, "," ) + ") values(" + strings.Join(placeholder, "," + ")"
+	builder.Prepare = "insert into " + builder.GetTable() + " (" + strings.Join(fieldName, ",") + ") values(" + strings.Join(placeholder, ",") + ")"
 
 	//	separate value and put it into Exec
 	return builder
 }
 
-func (builder *Builder) Do(exec string) (sql.Result ,error) {
+func (builder *Builder) Do() (sql.Result, error) {
 	var statement *sql.Stmt
 	statement, err := builder.DB.Prepare(builder.Prepare)
 	if err != nil {
@@ -101,4 +101,18 @@ func (builder *Builder) Do(exec string) (sql.Result ,error) {
 		return nil, err
 	}
 	return result, nil
+}
+
+func main() {
+	mq := mq{}
+	builder, err := mq.Newbuilder("root", "password", "127.0.0.1", "cmdb")
+	if err != nil {
+
+	}
+	product := Product{
+		Name:        "test",
+		Description: "testdescription",
+		Price:       10,
+	}
+	builder.Table("product").Insert(product).Do()
 }
