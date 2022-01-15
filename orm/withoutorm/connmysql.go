@@ -22,8 +22,10 @@ func ConnMysql() (*sql.DB, error) {
 
 func InsertDB(db *sql.DB) (sql.Result, error) {
 	// insert data
-	query := "insert into product (name, description, price) values (xx,xx,xx)"
-	result, err := db.Exec(query)
+	//query := "insert into product (name, description, price) values (xx,xx,xx)"
+	//result, err := db.Exec(query)
+	statement, err := db.Prepare("insert into product (name, description, price) values (?,?,?)")
+	result, err := statement.Exec("pen", "used to write something", "2")
 	if err != nil {
 		return nil, err
 	}

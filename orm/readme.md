@@ -22,7 +22,19 @@ Builer().Table("product").Do("insert", product)
 Builer().Table("product").Where("name", "=", "testproduct").Do("delete")
 ```
 
-所以Do 其实是一个interface?
+我们考虑增加删除语句的都是用k-v 键值对， k-v的只有map 跟struct
+map的缺点是所有key 都是一个类型，这不符合我们的要求，因此使用struct
+```go
+type Product struct {
+	Name string `sql: name`
+}
+
+p1 := Product{
+	Name: "tt",
+}
+Newbuilder().Table("product").Insert(p1)
+```
+
 
 
 
