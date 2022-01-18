@@ -13,7 +13,8 @@ type Product struct {
 }
 
 func ConnMysql() (*sql.DB, error) {
-	db, err := sql.Open("mysql", "root@54321@tcp(127.0.0.1:3306)/ApiDB?charset=utf8")
+	//db, err := sql.Open("mysql", "root:123456aGVsbG93b3JsZAo=aGVsbG93b3JsZAo=@/cmdbtcp(127.0.0.1:3306)/ApiDB?charset=utf8")
+	db, err := sql.Open("mysql", "root:123456aGVsbG93b3JsZAo=aGVsbG93b3JsZAo=@/cmdb")
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +35,7 @@ func InsertDB(db *sql.DB) (sql.Result, error) {
 
 func QueryDB(db *sql.DB) ([]Product, error) {
 	// query data
-	query := ""
+	query := "select * from product"
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
@@ -43,7 +44,7 @@ func QueryDB(db *sql.DB) ([]Product, error) {
 	var name, description, price string
 	for rows.Next() {
 		if err := rows.Scan(&name, &description, &price); err != nil {
-			fmt.Errorf("query err", err.Error())
+			fmt.Println("query err", err.Error())
 		}
 		product = append(product, Product{
 			Name:        name,
